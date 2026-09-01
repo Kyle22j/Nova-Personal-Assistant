@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NOVA | Personal AI Assistant</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">✦</div>
+            <h1>NOVA</h1>
+            <p>Your Personal AI</p>
+        </div>
+
+        <nav>
+            <button class="nav-btn active" data-section="dashboard">
+                <span>⌂</span> Dashboard
+            </button>
+
+            <button class="nav-btn" data-section="tasks">
+                <span>✓</span> Tasks
+            </button>
+
+            <button class="nav-btn" data-section="schedule">
+                <span>◷</span> Schedule
+            </button>
+
+            <button class="nav-btn" data-section="projects">
+                <span>▣</span> Projects
+            </button>
+
+            <button class="nav-btn" data-section="assistant">
+                <span>✦</span> NOVA
+            </button>
+        </nav>
+
+        <div class="sidebar-footer">
+            <p>NOVA Personal Intelligence System</p>
+        </div>
+
+    </aside>
+
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <h1>✦ NOVA</h1>
+        <button id="menu-toggle">☰</button>
+    </header>
+
+
+    <main class="main-content">
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page-section active">
+
+            <div class="page-header">
+                <div>
+                    <p class="eyebrow">YOUR PERSONAL SPACE</p>
+                    <h2 id="time-greeting">Good day 👋</h2>
+                    <p id="current-date"></p>
+                </div>
+
+                <button class="briefing-btn" onclick="giveDailyBriefing()">
+                    ✦ Daily Briefing
+                </button>
+            </div>
+
+
+            <div class="dashboard-grid">
+
+                <div class="card welcome-card">
+                    <div>
+                        <p class="card-label">NOVA'S INSIGHT</p>
+                        <h3 id="daily-greeting">
+                            Let's make today count.
+                        </h3>
+                        <p id="daily-advice">
+                            I'm analyzing your tasks, projects and schedule.
+                        </p>
+                    </div>
+
+                    <div class="orb">✦</div>
+                </div>
+
+
+                <div class="card stat-card">
+                    <p>Active Tasks</p>
+                    <h3 id="task-count">0</h3>
+                    <span>Still to complete</span>
+                </div>
+
+                <div class="card stat-card">
+                    <p>Today's Events</p>
+                    <h3 id="schedule-count">0</h3>
+                    <span>On your calendar</span>
+                </div>
+
+                <div class="card stat-card">
+                    <p>Pending Projects</p>
+                    <h3 id="project-count">0</h3>
+                    <span>Currently active</span>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-sections">
+
+                <div class="card overview-card">
+                    <div class="section-title">
+                        <div>
+                            <p class="card-label">UP NEXT</p>
+                            <h3>Upcoming Tasks</h3>
+                        </div>
+
+                        <button class="small-btn"
+                            onclick="showSection('tasks')">
+                            View all
+                        </button>
+                    </div>
+
+                    <div id="dashboard-tasks"
+                        class="mini-list">
+                    </div>
+                </div>
+
+
+                <div class="card overview-card">
+                    <div class="section-title">
+                        <div>
+                            <p class="card-label">DEADLINES</p>
+                            <h3>Upcoming Projects</h3>
+                        </div>
+
+                        <button class="small-btn"
+                            onclick="showSection('projects')">
+                            View all
+                        </button>
+                    </div>
+
+                    <div id="dashboard-projects"
+                        class="mini-list">
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- TASKS -->
+        <section id="tasks" class="page-section">
+
+            <div class="page-header">
+                <div>
+                    <p class="eyebrow">PRODUCTIVITY</p>
+                    <h2>My Tasks</h2>
+                    <p>Everything you need to accomplish.</p>
+                </div>
+            </div>
+
+            <div class="card input-card">
+
+                <input
+                    type="text"
+                    id="task-input"
+                    placeholder="What do you need to do?"
+                >
+
+                <select id="task-priority">
+                    <option value="low">Low Priority</option>
+                    <option value="medium" selected>
+                        Medium Priority
+                    </option>
+                    <option value="high">
+                        High Priority
+                    </option>
+                </select>
+
+                <input type="date" id="task-date">
+
+                <button id="add-task-btn">
+                    Add Task
+                </button>
+
+            </div>
+
+            <div class="task-filter">
+                <button class="filter-btn active"
+                    data-filter="all">
+                    All
+                </button>
+
+                <button class="filter-btn"
+                    data-filter="active">
+                    Active
+                </button>
+
+                <button class="filter-btn"
+                    data-filter="completed">
+                    Completed
+                </button>
+            </div>
+
+            <div id="task-list"
+                class="task-list">
+            </div>
+
+        </section>
+
+
+        <!-- SCHEDULE -->
+        <section id="schedule"
+            class="page-section">
+
+            <div class="page-header">
+                <div>
+                    <p class="eyebrow">TIME MANAGEMENT</p>
+                    <h2>My Schedule</h2>
+                    <p>Plan your time intelligently.</p>
+                </div>
+            </div>
+
+            <div class="card input-card schedule-input">
+
+                <input
+                    type="text"
+                    id="event-input"
+                    placeholder="Event or activity"
+                >
+
+                <input
+                    type="date"
+                    id="event-date"
+                >
+
+                <input
+                    type="time"
+                    id="event-time"
+                >
+
+                <button id="add-event-btn">
+                    Add Event
+                </button>
+
+            </div>
+
+            <div class="free-time-card card">
+                <div>
+                    <p class="card-label">
+                        TIME ANALYSIS
+                    </p>
+
+                    <h3>When am I free?</h3>
+
+                    <p id="free-time-display">
+                        Add events and NOVA will analyze
+                        your available time.
+                    </p>
+                </div>
+
+                <button class="small-btn"
+                    onclick="analyzeFreeTime()">
+                    Analyze Day
+                </button>
+            </div>
+
+            <div id="schedule-list"
+                class="schedule-list">
+            </div>
+
+        </section>
+
+
+        <!-- PROJECTS -->
+        <section id="projects"
+            class="page-section">
+
+            <div class="page-header">
+                <div>
+                    <p class="eyebrow">
+                        LONG-TERM WORK
+                    </p>
+
+                    <h2>My Projects</h2>
+
+                    <p>
+                        Track your projects and important
+                        deadlines.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="card project-input">
+
+                <input
+                    type="text"
+                    id="project-input"
+                    placeholder="Project name"
+                >
+
+                <input
+                    type="date"
+                    id="project-deadline"
+                >
+
+                <select id="project-status">
+
+                    <option value="pending">
+                        Pending
+                    </option>
+
+                    <option value="in-progress">
+                        In Progress
+                    </option>
+
+                    <option value="completed">
+                        Completed
+                    </option>
+
+                </select>
+
+                <button id="add-project-btn">
+                    Add Project
+                </button>
+
+            </div>
+
+
+            <div id="project-list"
+                class="project-list">
+            </div>
+
+        </section>
+
+
+        <!-- AI ASSISTANT -->
+        <section id="assistant"
+            class="page-section">
+
+            <div class="page-header">
+                <div>
+                    <p class="eyebrow">
+                        PERSONAL INTELLIGENCE
+                    </p>
+
+                    <h2>Talk to NOVA</h2>
+
+                    <p>
+                        Ask me about your life,
+                        tasks, projects and schedule.
+                    </p>
+                </div>
+
+                <button class="voice-mode-btn"
+                    onclick="toggleVoiceMode()"
+                    id="voice-mode-btn">
+
+                    🎙 Voice Mode
+
+                </button>
+
+            </div>
+
+
+            <div class="chat-container">
+
+                <div id="chat-messages"
+                    class="chat-messages">
+
+                    <div class="message ai-message">
+
+                        <div class="message-avatar">
+                            ✦
+                        </div>
+
+                        <div class="message-content">
+
+                            <p>
+                                Hello! I'm NOVA. 🤖
+                                I can help you keep track
+                                of your tasks, schedule,
+                                projects and deadlines.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chat-input-area">
+
+                    <button id="voice-btn"
+                        title="Speak to NOVA">
+                        🎙️
+                    </button>
+
+                    <input
+                        type="text"
+                        id="chat-input"
+                        placeholder="Talk to NOVA..."
+                    >
+
+                    <button id="send-btn">
+                        Send ✦
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
