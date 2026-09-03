@@ -1,17 +1,14 @@
-// ==========================================
 // LUNA PERSONAL AI ASSISTANT
-// VERSION 1.6
 // Natural Voice & Conversation Upgrade
-// ==========================================
 
-
-// ==========================================
 // DATA
-// ==========================================
 
 let tasks = JSON.parse(localStorage.getItem("lunaTasks")) || [];
 let events = JSON.parse(localStorage.getItem("lunaEvents")) || [];
 let projects = JSON.parse(localStorage.getItem("lunaProjects")) || [];
+let memories = JSON.parsel(localstorage.getItem("lunaMemories")) || [];
+let habits = JSON.parsel(localstorage.getItem("lunaHabits")) || [];
+let expenses = JSON.parsel(localstorage.getitem("lunaExpenses")) || [];
 
 let currentFilter = "all";
 
@@ -364,7 +361,7 @@ function addTask() {
 
 function saveTasks() {
     localStorage.setItem(
-        "novaTasks",
+        "lunaTasks",
         JSON.stringify(tasks)
     );
 }
@@ -1988,8 +1985,326 @@ function addNaturalEvent(message) {
 }
 
 // ==========================================
-// CHAT SYSTEM
+// MEMORY
 // ==========================================
+
+function addMemory() {
+
+    const memoryInput =
+        document.getElementById("memory-input");
+
+    const text =
+        memoryInput.value.trim();
+
+    if (!text) {
+
+        alert(
+            "Please write something for LUNA to remember."
+        );
+
+        return;
+
+    }
+
+
+    memories.push({
+
+        id: Date.now(),
+
+        text: text,
+
+        date:
+            new Date().toISOString()
+
+    });
+
+
+    saveMemories();
+
+    memoryInput.value = "";
+
+    renderMemories();
+
+}
+
+
+function saveMemories() {
+
+    localStorage.setItem(
+        "lunaMemories",
+        JSON.stringify(memories)
+    );
+
+}
+
+
+function renderMemories() {
+
+    const memoryList =
+        document.getElementById("memory-list");
+
+    if (!memoryList) return;
+
+
+    memoryList.innerHTML = "";
+
+
+    if (memories.length === 0) {
+
+        memoryList.innerHTML = `
+
+            <div class="empty-state">
+
+                Nothing saved yet. 🧠✨
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    memories
+        .slice()
+        .reverse()
+        .forEach(function (memory) {
+
+            const memoryElement =
+                document.createElement("div");
+
+            memoryElement.className =
+                "memory-item";
+
+
+            memoryElement.innerHTML = `
+
+                <div class="memory-info">
+
+                    <span class="memory-icon">
+                        📝
+                    </span>
+
+                    <div>
+
+                        <h4>
+                            ${escapeHTML(memory.text)}
+                        </h4>
+
+                        <p>
+
+                            Remembered on
+                            ${new Date(memory.date)
+                                .toLocaleDateString()}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteMemory(${memory.id})"
+                >
+
+                    ×
+
+                </button>
+
+            `;
+
+
+            memoryList.appendChild(
+                memoryElement
+            );
+
+        });
+
+}
+
+
+function deleteMemory(id) {
+
+    memories =
+        memories.filter(
+            memory =>
+                memory.id !== id
+        );
+
+
+    saveMemories();
+
+    renderMemories();
+
+}
+
+// HABIT //
+
+function addHbait() {
+    const habitInput =
+        document.getElementById(
+            "habit-frequency"
+        );
+    
+    const name = 
+        habitInput.value.trim();
+
+    if (!name) {
+
+        alert(
+            "Please enter a habit or goal."
+        );
+
+        return;
+
+    }
+
+
+    habits.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        frequency:
+            habitFrequency.value,
+
+        streak: 0,
+
+        completedToday: false,
+
+        lastCompleted: null
+
+    });
+
+    saveHabits();
+
+    habitInput.value = "";
+
+    renderHabits();
+
+}
+
+function saveHabits() {
+
+    localStoage.setItem(
+        "lunaHabits",
+        JSON.stringify(habits)
+
+    );
+}
+
+function renderHabits() {
+
+    const habitList =
+
+        documet.getElementById("habit-list");
+
+    if (!habitlist) return;
+
+    habitlist.innerHTML = "";
+
+    if (habits.length === 0) {
+
+        habitList.innerHTML = `
+
+            <div class="empty-state">
+
+                No habits yet. Start building
+                the person you want to become. ✨
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    habits.forEach(function (habit) {
+
+        cont habitElement =
+            documet.createElement("div");
+
+    habitElement.className =
+        "habit-item" +
+        (
+            habit.completedToday
+                ? " completed"
+                : ""
+
+        );
+
+    habitElement.innerHTML = 
+
+            <div class="habit-info">
+
+                <input
+                    type="checkbox"
+
+                    class="habit-checkbox"
+
+                    ${
+                        habit.completedToday
+                            ? "checked"
+                            : ""
+                    }
+
+                    onchange="toggleHabit(
+                        ${habit.id}
+                    )"
+                >
+
+
+                <div>
+
+    
+                    <h3>
+
+                        ${escapeHTML(habit.name)}
+
+        </h3>
+
+        <p>
+                        ${habit.frequency}
+                        habit
+
+                        . 🔥
+                        ${habit.streak}
+                        day streak
+
+                   </p>
+
+                 </div>
+            </div>
+
+        <button
+              class="delete-btn"
+
+              onclick="deleteHabit(
+                   ${habit.id}
+                )"
+            >
+                    x
+                    
+            </button>
+        `;
+
+        habitList.appendChild(
+              habitElement
+        );
+
+    });
+
+    }
+
+        
+
+ //-- CHAT SYSTEM --//
+
 
 function sendMessage() {
 
