@@ -1319,6 +1319,173 @@ function giveDailyBriefing() {
 
 }
 
+// ==========================================
+// LUNA 1.6 - NATURAL TASK RECOGNITION
+// ==========================================
+
+function detectTaskRequest(message) {
+
+    const text = message.toLowerCase().trim();
+
+    const taskPatterns = [
+        "i need to",
+        "i have to",
+        "remind me to",
+        "add a task",
+        "add task",
+        "remember to",
+        "i should",
+        "i must",
+        "don't let me forget to",
+        "do not let me forget to"
+    ];
+
+    for (const pattern of taskPatterns) {
+
+        if (text.includes(pattern)) {
+
+            return {
+                isTask: true,
+                pattern: pattern
+            };
+
+        }
+
+    }
+
+    return {
+        isTask: false
+    };
+
+}
+
+function extractTask(message, pattern) {
+
+    let task = message;
+
+    const lowerMessage = message.toLowerCase();
+
+    const index = lowerMessage.indexOf(pattern);
+
+    if (index !== -1) {
+
+        task = message.substring(index + pattern.length).trim();
+
+    }
+
+    // Remove common unnecessary words
+    task = task.replace(/^to\s+/i, "");
+
+    // Remove LUNA's name from the beginning
+    task = task.replace(/^luna[,\s]*/i, "");
+
+    // Remove punctuation at the end
+    task = task.replace(/[.!?]+$/, "");
+
+    return task;
+
+}
+
+function detectTaskDeadline(message) {
+
+    const text = message.toLowerCase();
+
+    const deadlinePatterns = [
+        "today",
+        "tomorrow",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday",
+        "sunday"
+    ];
+
+    for (const day of deadlinePatterns) {
+
+        if (text.includes(`by ${day}`)) {
+
+            return day;
+
+        }
+
+    }
+
+    return null;
+
+}
+
+function addNaturalTask(message) {
+
+    const taskDetection = detectTaskRequest(message);
+
+    if (!taskDetection.isTask) {
+        return null;
+    }
+
+    let taskName = extractTask(
+        message,
+        taskDetection.pattern
+    );
+
+    const deadline = detectTaskDeadline(message);
+
+    // Remove deadline phrase from task name
+    if (deadline) {
+
+        taskName = taskName
+            .replace(
+                new RegExp(`by ${deadline}`, "i"),
+                ""
+            )
+            .trim();
+
+    }
+
+    // Prevent empty tasks
+    if (!taskName) {
+        return null;
+    }
+
+    // Create the task
+    const newTask = {
+
+        id: Date.now(),
+
+        title: taskName,
+
+        completed: false,
+
+        deadline: deadline,
+
+        createdAt: new Date().toISOString()
+
+    };
+
+    // Add task to LUNA's memory
+    assistantMemory.tasks.push(newTask);
+    const newTask = addNaturalTask(message);
+
+if (newTask) {
+
+    conversationMemory.lastTopic = "tasks";
+
+    if (newTask.deadline) {
+
+        return `Of course! I've added "${newTask.title}" to your tasks, and I'll keep in mind that it's due by ${newTask.deadline}. 🌙`;
+
+    }
+
+    return `Done! I've added "${newTask.title}" to your task list. 🌙`;
+
+}
+    // Save memory
+    saveMemory();
+
+    return newTask;
+
+}
 
 // ==========================================
 // CHAT SYSTEM
@@ -1428,7 +1595,7 @@ function generateAssistantResponse(message) {
         text.includes("what about") ||
         text.includes("tell me more") ||
         text.includes("and that") ||
-        text.imcludes("please tell me about")
+        text.includes("please tell me about")
     ) {
 
         return handleFollowUp();
@@ -2135,7 +2302,7 @@ function loadBestVoice() {
 
         if (voice) {
 
-            novaVoice = voice;
+            lunaVoice = voice;
 
             return;
 
@@ -2143,7 +2310,7 @@ function loadBestVoice() {
 
     }
 
-    novaVoice =
+    lunaVoice =
         voices.find(
             voice =>
                 voice.lang.startsWith("en")
