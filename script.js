@@ -6,9 +6,9 @@
 let tasks = JSON.parse(localStorage.getItem("lunaTasks")) || [];
 let events = JSON.parse(localStorage.getItem("lunaEvents")) || [];
 let projects = JSON.parse(localStorage.getItem("lunaProjects")) || [];
-let memories = JSON.parsel(localstorage.getItem("lunaMemories")) || [];
-let habits = JSON.parsel(localstorage.getItem("lunaHabits")) || [];
-let expenses = JSON.parsel(localstorage.getitem("lunaExpenses")) || [];
+let memories = JSON.parse(localStorage.getItem("lunaMemories")) || [];
+let habits = JSON.parse(localStorage.getItem("lunaHabits")) || [];
+let expenses = JSON.parse(localStorage.getItem("lunaExpenses")) || [];
 
 let currentFilter = "all";
 
@@ -69,6 +69,9 @@ document.addEventListener("DOMContentLoaded", function () {
     renderTasks();
     renderEvents();
     renderProjects();
+    renderMemories();
+    renderHabits();
+    renderExpenses();
 
     updateDashboard();
 
@@ -2141,15 +2144,21 @@ function deleteMemory(id) {
 
 }
 
-// HABIT //
 
-function addHbait() {
+// HABITS //
+
+
+function addHabit() {
+
     const habitInput =
-        document.getElementById(
-            "habit-frequency"
-        );
-    
-    const name = 
+        document.getElementById("habit-input");
+
+    const habitFrequency =
+        document.getElementById("habit-frequency");
+
+    if (!habitInput || !habitFrequency) return;
+
+    const name =
         habitInput.value.trim();
 
     if (!name) {
@@ -2161,7 +2170,6 @@ function addHbait() {
         return;
 
     }
-
 
     habits.push({
 
@@ -2188,24 +2196,32 @@ function addHbait() {
 
 }
 
+
 function saveHabits() {
 
-    localStoage.setItem(
+    localStorage.setItem(
+
         "lunaHabits",
+
         JSON.stringify(habits)
 
     );
+
 }
+
+
 
 function renderHabits() {
 
     const habitList =
+        document.getElementById(
+            "habit-list"
+        );
 
-        documet.getElementById("habit-list");
+    if (!habitList) return;
 
-    if (!habitlist) return;
+    habitList.innerHTML = "";
 
-    habitlist.innerHTML = "";
 
     if (habits.length === 0) {
 
@@ -2224,25 +2240,28 @@ function renderHabits() {
 
     }
 
+
     habits.forEach(function (habit) {
 
-        cont habitElement =
-            documet.createElement("div");
+        const habitElement =
+            document.createElement("div");
 
-    habitElement.className =
-        "habit-item" +
-        (
-            habit.completedToday
-                ? " completed"
-                : ""
 
-        );
+        habitElement.className =
+            "habit-item" +
+            (
+                habit.completedToday
+                    ? " completed"
+                    : ""
+            );
 
-    habitElement.innerHTML = 
+
+        habitElement.innerHTML = `
 
             <div class="habit-info">
 
                 <input
+
                     type="checkbox"
 
                     class="habit-checkbox"
@@ -2256,50 +2275,339 @@ function renderHabits() {
                     onchange="toggleHabit(
                         ${habit.id}
                     )"
+
                 >
 
 
                 <div>
 
-    
                     <h3>
-
                         ${escapeHTML(habit.name)}
+                    </h3>
 
-        </h3>
 
-        <p>
+                    <p>
+
                         ${habit.frequency}
                         habit
 
-                        . 🔥
+                        • 🔥
                         ${habit.streak}
                         day streak
 
-                   </p>
+                    </p>
 
-                 </div>
+                </div>
+
             </div>
 
-        <button
-              class="delete-btn"
 
-              onclick="deleteHabit(
-                   ${habit.id}
+            <button
+
+                class="delete-btn"
+
+                onclick="deleteHabit(
+                    ${habit.id}
                 )"
+
             >
-                    x
-                    
+
+                ×
+
             </button>
+
         `;
 
+
         habitList.appendChild(
-              habitElement
+            habitElement
         );
 
     });
 
+}
+
+
+function toggleHabit(id) {
+
+    habits = habits.map(function (habit) {
+
+        if (habit.id === id) {
+
+            if (!habit.completedToday) {
+
+                habit.completedToday = true;
+
+                habit.streak += 1;
+
+                habit.lastCompleted =
+                    getTodayString();
+
+            } else {
+
+                habit.completedToday = false;
+
+            }
+
+        }
+
+        return habit;
+
+    });
+
+
+    saveHabits();
+
+    renderHabits();
+
+}
+
+
+// EXPENSES //
+
+function addExpense() {
+
+    const expenseName =
+        document.getElementById(
+            "expense-name"
+        );
+
+    const expenseAmount =
+        document.getElementById(
+            "expense-amount"
+        );
+
+    const expenseCategory =
+        document.getElementById(
+            "expense-category"
+        );
+
+
+    if (
+        !expenseName ||
+        !expenseAmount ||
+        !expenseCategory
+    ) return;
+
+
+    const name =
+        expenseName.value.trim();
+
+    const amount =
+        parseFloat(
+            expenseAmount.value
+        );
+
+
+    if (!name || isNaN(amount)) {
+
+        alert(
+            "Please enter an expense and amount."
+        );
+
+        return;
+
     }
+
+
+    expenses.push({
+
+        id: Date.now(),
+
+        name: name,
+
+        amount: amount,
+
+        category:
+            expenseCategory.value,
+
+        date:
+            getTodayString()
+
+    });
+
+
+    saveExpenses();
+
+
+    expenseName.value = "";
+
+    expenseAmount.value = "";
+
+
+    renderExpenses();
+
+}
+
+
+
+// SAVE EXPENSES //
+
+
+function saveExpenses() {
+
+    localStorage.setItem(
+
+        "lunaExpenses",
+
+        JSON.stringify(expenses)
+
+    );
+
+}
+
+
+
+// RENDER EXPENSES //
+
+function renderExpenses() {
+
+    const expenseList =
+        document.getElementById(
+            "expense-list"
+        );
+
+
+    if (!expenseList) return;
+
+
+    expenseList.innerHTML = "";
+
+
+    if (expenses.length === 0) {
+
+        expenseList.innerHTML = `
+
+            <div class="empty-state">
+
+                No expenses recorded yet. 💰
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const sortedExpenses =
+        [...expenses]
+        .sort(
+            (a, b) =>
+                new Date(b.date)
+                - new Date(a.date)
+        );
+
+
+    sortedExpenses.forEach(
+        function (expense) {
+
+            const expenseElement =
+                document.createElement("div");
+
+
+            expenseElement.className =
+                "expense-item";
+
+
+            expenseElement.innerHTML = `
+
+                <div class="expense-info">
+
+                    <h3>
+                        ${escapeHTML(
+                            expense.name
+                        )}
+                    </h3>
+
+
+                    <p>
+
+                        ${expense.category}
+
+                        •
+                        
+                        ${formatDate(
+                            expense.date
+                        )}
+
+                    </p>
+
+                </div>
+
+
+                <div class="expense-right">
+
+                    <strong>
+
+                        KES
+                        ${expense.amount.toLocaleString()}
+
+                    </strong>
+
+
+                    <button
+
+                        class="delete-btn"
+
+                        onclick="deleteExpense(
+                            ${expense.id}
+                        )"
+
+                    >
+
+                        ×
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            expenseList.appendChild(
+                expenseElement
+            );
+
+        }
+    );
+
+}
+
+
+
+// DELETE EXPENSE //
+
+function deleteExpense(id) {
+
+    expenses =
+        expenses.filter(
+            expense =>
+                expense.id !== id
+        );
+
+
+    saveExpenses();
+
+    renderExpenses();
+
+}
+
+
+function deleteHabit(id) {
+
+    habits =
+        habits.filter(
+            habit => habit.id !== id
+        );
+
+
+    saveHabits();
+
+    renderHabits();
+
+}
 
         
 
