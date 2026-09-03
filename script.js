@@ -1629,6 +1629,365 @@ function saveTasks() {
 }
 
 // ==========================================
+// LUNA 1.6 - NATURAL SCHEDULE RECOGNITION
+// ==========================================
+
+function detectScheduleRequest(message) {
+
+    const text = message.toLowerCase();
+
+    const schedulePatterns = [
+        "i have",
+        "i've got",
+        "add an event",
+        "add event",
+        "schedule",
+        "appointment",
+        "meeting",
+        "class"
+    ];
+
+    for (const pattern of schedulePatterns) {
+
+        if (text.includes(pattern)) {
+
+            return {
+                isSchedule: true,
+                pattern: pattern
+            };
+
+        }
+
+    }
+
+    return {
+        isSchedule: false
+    };
+
+}
+
+
+// ==========================================
+// DETECT EVENT DATE
+// ==========================================
+
+function detectEventDate(message) {
+
+    const text = message.toLowerCase();
+
+    const today = new Date();
+
+
+    // TODAY
+
+    if (text.includes("today")) {
+
+        return getTodayString();
+
+    }
+
+
+    // TOMORROW
+
+    if (text.includes("tomorrow")) {
+
+        const tomorrow = new Date();
+
+        tomorrow.setDate(
+            tomorrow.getDate() + 1
+        );
+
+        return formatDateForInput(
+            tomorrow
+        );
+
+    }
+
+
+    // DAYS OF THE WEEK
+
+    const days = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+    ];
+
+    for (const day of days) {
+
+        if (
+            text.includes(`on ${day}`) ||
+            text.includes(`this ${day}`) ||
+            text.includes(`next ${day}`)
+        ) {
+
+            return getNextWeekday(day);
+
+        }
+
+    }
+
+
+    return "";
+
+}
+
+
+// ==========================================
+// DETECT EVENT TIME
+// ==========================================
+
+function detectEventTime(message) {
+
+    const text = message.toLowerCase();
+
+
+    // Example: 2 PM / 2PM
+
+    const timeMatch =
+        text.match(
+            /\b(\d{1,2})\s*(am|pm)\b/i
+        );
+
+    if (timeMatch) {
+
+        let hour =
+            parseInt(timeMatch[1]);
+
+        const period =
+            timeMatch[2].toLowerCase();
+
+        if (
+            period === "pm" &&
+            hour !== 12
+        ) {
+
+            hour += 12;
+
+        }
+
+        if (
+            period === "am" &&
+            hour === 12
+        ) {
+
+            hour = 0;
+
+        }
+
+        return (
+            String(hour).padStart(2, "0") +
+            ":00"
+        );
+
+    }
+
+
+    // Example: 14:30
+
+    const twentyFourHourMatch =
+        text.match(
+            /\b([01]?\d|2[0-3]):([0-5]\d)\b/
+        );
+
+    if (twentyFourHourMatch) {
+
+        return (
+            twentyFourHourMatch[1]
+                .padStart(2, "0") +
+            ":" +
+            twentyFourHourMatch[2]
+        );
+
+    }
+
+
+    return "";
+
+}
+
+
+// ==========================================
+// EXTRACT EVENT NAME
+// ==========================================
+
+function extractEventName(message) {
+
+    let eventName = message;
+
+
+    // Remove LUNA's name.
+
+    eventName =
+        eventName.replace(
+            /^(hey |hi )?luna[,\s]*/i,
+            ""
+        );
+
+
+    // Remove common introduction phrases.
+
+    const phrases = [
+        "i have",
+        "i've got",
+        "add an event called",
+        "add an event",
+        "add event",
+        "schedule"
+    ];
+
+    for (const phrase of phrases) {
+
+        const regex =
+            new RegExp(
+                phrase,
+                "i"
+            );
+
+        eventName =
+            eventName.replace(
+                regex,
+                ""
+            );
+
+    }
+
+
+    // Remove date phrases.
+
+    eventName =
+        eventName.replace(
+            /\btoday\b/gi,
+            ""
+        );
+
+    eventName =
+        eventName.replace(
+            /\btomorrow\b/gi,
+            ""
+        );
+
+    eventName =
+        eventName.replace(
+            /\b(on|this|next)\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/gi,
+            ""
+        );
+
+
+    // Remove time phrases.
+
+    eventName =
+        eventName.replace(
+            /\bat\s+\d{1,2}\s*(am|pm)\b/gi,
+            ""
+        );
+
+    eventName =
+        eventName.replace(
+            /\b\d{1,2}\s*(am|pm)\b/gi,
+            ""
+        );
+
+    eventName =
+        eventName.replace(
+            /\bat\s+[01]?\d|2[0-3]:[0-5]\d\b/gi,
+            ""
+        );
+
+
+    // Clean unnecessary words.
+
+    eventName =
+        eventName
+            .replace(/\bat\b/gi, "")
+            .replace(/\bon\b/gi, "")
+            .replace(/\s+/g, " ")
+            .replace(/[,.!?]+$/g, "")
+            .trim();
+
+
+    return eventName;
+
+}
+
+
+// ==========================================
+// CREATE NATURAL EVENT
+// ==========================================
+
+function addNaturalEvent(message) {
+
+    const detection =
+        detectScheduleRequest(message);
+
+
+    if (!detection.isSchedule) {
+
+        return null;
+
+    }
+
+
+    const date =
+        detectEventDate(message);
+
+    const time =
+        detectEventTime(message);
+
+
+    // Only automatically create an event
+    // when LUNA can identify a date.
+
+    if (!date) {
+
+        return null;
+
+    }
+
+
+    const eventName =
+        extractEventName(message);
+
+
+    if (!eventName) {
+
+        return null;
+
+    }
+
+
+    const newEvent = {
+
+        id: Date.now(),
+
+        text: eventName,
+
+        date: date,
+
+        time: time
+
+    };
+
+
+    events.push(newEvent);
+
+    sortEvents();
+
+    saveEvents();
+
+    renderEvents();
+
+    updateDashboard();
+
+
+    return newEvent;
+
+}
+
+// ==========================================
 // CHAT SYSTEM
 // ==========================================
 
@@ -1709,6 +2068,8 @@ function addChatMessage(text, sender) {
 
 function generateAssistantResponse(message) {
 
+    // NATURAL TASK DETECTION //
+
     const newTask =
         addNaturalTask(message);
 
@@ -1735,6 +2096,39 @@ function generateAssistantResponse(message) {
             Done! I've added
             "${newTask.text}"
             to your task list. 🌙
+        `;
+
+    }
+
+
+    // NATURAL SCHEDULE DETECTION //
+   
+
+    const newEvent =
+        addNaturalEvent(message);
+
+    if (newEvent) {
+
+        conversationMemory.lastTopic =
+            "schedule";
+
+        if (newEvent.time) {
+
+            return `
+                Got it! I've added
+                "${newEvent.text}"
+                to your schedule for
+                ${formatDate(newEvent.date)}
+                at ${formatTime(newEvent.time)}. 🌙
+            `;
+
+        }
+
+        return `
+            Got it! I've added
+            "${newEvent.text}"
+            to your schedule for
+            ${formatDate(newEvent.date)}. 🌙
         `;
 
     }
