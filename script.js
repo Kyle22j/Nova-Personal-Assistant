@@ -1,5 +1,5 @@
 // ==========================================
-// NOVA PERSONAL AI ASSISTANT
+// LUNA PERSONAL AI ASSISTANT
 // VERSION 1.6
 // Natural Voice & Conversation Upgrade
 // ==========================================
@@ -9,15 +9,15 @@
 // DATA
 // ==========================================
 
-let tasks = JSON.parse(localStorage.getItem("novaTasks")) || [];
-let events = JSON.parse(localStorage.getItem("novaEvents")) || [];
-let projects = JSON.parse(localStorage.getItem("novaProjects")) || [];
+let tasks = JSON.parse(localStorage.getItem("lunaTasks")) || [];
+let events = JSON.parse(localStorage.getItem("lunaEvents")) || [];
+let projects = JSON.parse(localStorage.getItem("lunaProjects")) || [];
 
 let currentFilter = "all";
 
 
 // ==========================================
-// NOVA CONVERSATION MEMORY
+// LUNA CONVERSATION MEMORY
 // ==========================================
 
 let conversationMemory = {
@@ -34,8 +34,8 @@ let conversationMemory = {
 let voiceModeActive = false;
 let recognition = null;
 let recognitionSupported = false;
-let novaVoice = null;
-let novaIsSpeaking = false;
+let lunaVoice = null;
+let lunaIsSpeaking = false;
 let shouldRestartListening = false;
 
 
@@ -533,7 +533,7 @@ function sortEvents() {
 
 function saveEvents() {
     localStorage.setItem(
-        "novaEvents",
+        "lunaEvents",
         JSON.stringify(events)
     );
 }
@@ -638,7 +638,7 @@ function addProject() {
 function saveProjects() {
 
     localStorage.setItem(
-        "novaProjects",
+        "lunaProjects",
         JSON.stringify(projects)
     );
 
@@ -1396,7 +1396,7 @@ function addChatMessage(text, sender) {
 
 
 // ==========================================
-// NOVA'S CONVERSATIONAL BRAIN
+// LUNA'S CONVERSATIONAL BRAIN
 // ==========================================
 
 function generateAssistantResponse(message) {
@@ -1409,9 +1409,9 @@ function generateAssistantResponse(message) {
 
     if (
         text.includes("hello") ||
-        text.includes("hi nova") ||
-        text.includes("hey nova") ||
-        text === "nova"
+        text.includes("hi luna") ||
+        text.includes("hey luna") ||
+        text === "luna"
     ) {
 
         conversationMemory.lastTopic =
@@ -1427,7 +1427,8 @@ function generateAssistantResponse(message) {
     if (
         text.includes("what about") ||
         text.includes("tell me more") ||
-        text.includes("and that")
+        text.includes("and that") ||
+        text.imcludes("please tell me about")
     ) {
 
         return handleFollowUp();
@@ -2163,15 +2164,15 @@ function speak(text) {
 
     window.speechSynthesis.cancel();
 
-    novaIsSpeaking = true;
+    lunaIsSpeaking = true;
 
     const speech =
         new SpeechSynthesisUtterance(
             cleanSpeechText(text)
         );
 
-    if (novaVoice) {
-        speech.voice = novaVoice;
+    if (lunaVoice) {
+        speech.voice = lunaVoice;
     }
 
     speech.rate = 0.93;
@@ -2186,7 +2187,7 @@ function speak(text) {
 
         if (voiceButton) {
             voiceButton.classList.add(
-                "nova-speaking"
+                "luna-speaking"
             );
         }
 
@@ -2194,7 +2195,7 @@ function speak(text) {
 
     speech.onend = function () {
 
-        novaIsSpeaking = false;
+        lunaIsSpeaking = false;
 
         const voiceButton =
             document.getElementById(
@@ -2203,11 +2204,11 @@ function speak(text) {
 
         if (voiceButton) {
             voiceButton.classList.remove(
-                "nova-speaking"
+                "luna-speaking"
             );
         }
 
-        // Restart listening after NOVA finishes.
+        // Restart listening after LUNA finishes.
 
         if (
             voiceModeActive &&
@@ -2386,7 +2387,7 @@ function startListening() {
 
     }
 
-    if (novaIsSpeaking) return;
+    if (lunaIsSpeaking) return;
 
     try {
 
@@ -2410,13 +2411,13 @@ function handleVoiceInput(transcript) {
     let command =
         transcript
             .replace(
-                /^(hey |okay |ok )?nova[,\s]*/i,
+                /^(hey |okay |ok )?luna[,\s]*/i,
                 ""
             )
             .trim();
 
 
-    // If the person only says NOVA.
+    // If the person only says LUNA.
 
     if (!command) {
 
