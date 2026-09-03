@@ -620,7 +620,7 @@ button {
 }
 
 /* =========================================
-   NOVA VERSION 1.5 UPGRADES
+   LUNA VERSION 1.5 UPGRADES
 ========================================= */
 
 .dashboard-sections {
@@ -797,15 +797,15 @@ button {
 }
 
 /* =========================================
-   NOVA VERSION 1.6 — VOICE UPGRADES
+   LUNA VERSION 1.6 — VOICE UPGRADES
 ========================================= */
 
 #voice-btn.listening {
-    animation: novaListening 1.2s infinite;
+    animation: lunaListening 1.2s infinite;
     transform-origin: center;
 }
 
-@keyframes novaListening {
+@keyframes lunaListening {
     0% {
         transform: scale(1);
     }
@@ -837,11 +837,11 @@ button {
     }
 }
 
-.nova-speaking {
-    animation: novaSpeaking 1s infinite;
+.luna-speaking {
+    animation: lunaSpeaking 1s infinite;
 }
 
-@keyframes novaSpeaking {
+@keyframes lunaSpeaking {
     0% {
         transform: scale(1);
     }
