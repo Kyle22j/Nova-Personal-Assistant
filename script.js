@@ -1359,131 +1359,272 @@ function detectTaskRequest(message) {
 
 }
 
+
+// ==========================================
+// EXTRACT TASK NAME
+// ==========================================
+
 function extractTask(message, pattern) {
 
-    let task = message;
+    const lowerMessage =
+        message.toLowerCase();
 
-    const lowerMessage = message.toLowerCase();
+    const index =
+        lowerMessage.indexOf(pattern);
 
-    const index = lowerMessage.indexOf(pattern);
-
-    if (index !== -1) {
-
-        task = message.substring(index + pattern.length).trim();
-
+    if (index === -1) {
+        return "";
     }
 
-    // Remove common unnecessary words
-    task = task.replace(/^to\s+/i, "");
+    let task =
+        message
+            .substring(
+                index + pattern.length
+            )
+            .trim();
 
-    // Remove LUNA's name from the beginning
-    task = task.replace(/^luna[,\s]*/i, "");
+    // Remove "to" from the beginning.
 
-    // Remove punctuation at the end
-    task = task.replace(/[.!?]+$/, "");
+    task = task.replace(
+        /^to\s+/i,
+        ""
+    );
+
+    // Remove LUNA's name.
+
+    task = task.replace(
+        /^luna[,\s]*/i,
+        ""
+    );
+
+    // Remove ending punctuation.
+
+    task = task.replace(
+        /[.!?]+$/,
+        ""
+    );
 
     return task;
 
 }
 
+
+// ==========================================
+// DETECT DEADLINE
+// ==========================================
+
 function detectTaskDeadline(message) {
 
-    const text = message.toLowerCase();
+    const text =
+        message.toLowerCase();
 
-    const deadlinePatterns = [
-        "today",
-        "tomorrow",
+    if (text.includes("by today")) {
+        return getTodayString();
+    }
+
+    if (text.includes("by tomorrow")) {
+
+        const tomorrow =
+            new Date();
+
+        tomorrow.setDate(
+            tomorrow.getDate() + 1
+        );
+
+        return formatDateForInput(
+            tomorrow
+        );
+
+    }
+
+    const days = [
+        "sunday",
         "monday",
         "tuesday",
         "wednesday",
         "thursday",
         "friday",
-        "saturday",
-        "sunday"
+        "saturday"
     ];
 
-    for (const day of deadlinePatterns) {
+    for (const day of days) {
 
         if (text.includes(`by ${day}`)) {
 
-            return day;
+            return getNextWeekday(day);
 
         }
 
     }
 
-    return null;
+    return "";
 
 }
 
+
+// ==========================================
+// GET NEXT WEEKDAY
+// ==========================================
+
+function getNextWeekday(dayName) {
+
+    const days = [
+        "sunday",
+        "monday",
+        "tuesday",
+        "wednesday",
+        "thursday",
+        "friday",
+        "saturday"
+    ];
+
+    const targetDay =
+        days.indexOf(dayName);
+
+    const today =
+        new Date();
+
+    const currentDay =
+        today.getDay();
+
+    let difference =
+        targetDay - currentDay;
+
+    if (difference <= 0) {
+        difference += 7;
+    }
+
+    const result =
+        new Date();
+
+    result.setDate(
+        today.getDate() + difference
+    );
+
+    return formatDateForInput(result);
+
+}
+
+
+// ==========================================
+// FORMAT DATE FOR INPUT
+// ==========================================
+
+function formatDateForInput(date) {
+
+    const year =
+        date.getFullYear();
+
+    const month =
+        String(
+            date.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            date.getDate()
+        ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+// ==========================================
+// CREATE NATURAL TASK
+// ==========================================
+
 function addNaturalTask(message) {
 
-    const taskDetection = detectTaskRequest(message);
+    const detection =
+        detectTaskRequest(message);
 
-    if (!taskDetection.isTask) {
+    if (!detection.isTask) {
         return null;
     }
 
-    let taskName = extractTask(
-        message,
-        taskDetection.pattern
-    );
+    let taskName =
+        extractTask(
+            message,
+            detection.pattern
+        );
 
-    const deadline = detectTaskDeadline(message);
+    const deadline =
+        detectTaskDeadline(message);
 
-    // Remove deadline phrase from task name
+
+    // Remove deadline words from task name.
+
     if (deadline) {
 
-        taskName = taskName
-            .replace(
-                new RegExp(`by ${deadline}`, "i"),
-                ""
-            )
-            .trim();
+        const deadlinePatterns = [
+            /by today/i,
+            /by tomorrow/i,
+            /by sunday/i,
+            /by monday/i,
+            /by tuesday/i,
+            /by wednesday/i,
+            /by thursday/i,
+            /by friday/i,
+            /by saturday/i
+        ];
+
+        deadlinePatterns.forEach(
+            function (pattern) {
+
+                taskName =
+                    taskName.replace(
+                        pattern,
+                        ""
+                    ).trim();
+
+            }
+        );
 
     }
 
-    // Prevent empty tasks
+
     if (!taskName) {
         return null;
     }
 
-    // Create the task
+
     const newTask = {
 
         id: Date.now(),
 
-        title: taskName,
+        text: taskName,
 
-        completed: false,
+        priority: "medium",
 
-        deadline: deadline,
+        date: deadline,
 
-        createdAt: new Date().toISOString()
+        completed: false
 
     };
 
-    // Add task to LUNA's memory
-    assistantMemory.tasks.push(newTask);
-    const newTask = addNaturalTask(message);
 
-if (newTask) {
+    // Add to LUNA's REAL task system.
 
-    conversationMemory.lastTopic = "tasks";
+    tasks.push(newTask);
 
-    if (newTask.deadline) {
+    saveTasks();
 
-        return `Of course! I've added "${newTask.title}" to your tasks, and I'll keep in mind that it's due by ${newTask.deadline}. 🌙`;
+    renderTasks();
 
-    }
+    updateDashboard();
 
-    return `Done! I've added "${newTask.title}" to your task list. 🌙`;
-
-}
-    // Save memory
-    saveMemory();
 
     return newTask;
+
+}
+
+function saveTasks() {
+
+    localStorage.setItem(
+        "lunaTasks",
+        JSON.stringify(tasks)
+    );
 
 }
 
@@ -1567,6 +1708,36 @@ function addChatMessage(text, sender) {
 // ==========================================
 
 function generateAssistantResponse(message) {
+
+    const newTask =
+        addNaturalTask(message);
+
+    if (newTask) {
+
+        conversationMemory.lastTopic =
+            "tasks";
+
+        conversationMemory.lastTask =
+            newTask;
+
+        if (newTask.date) {
+
+            return `
+                Done! I've added
+                "${newTask.text}" to your tasks.
+                Its deadline is
+                ${formatDate(newTask.date)}. 🌙
+            `;
+
+        }
+
+        return `
+            Done! I've added
+            "${newTask.text}"
+            to your task list. 🌙
+        `;
+
+    }
 
     const text =
         message.toLowerCase().trim();
@@ -2449,7 +2620,7 @@ function setupVoiceRecognition() {
             "click",
             function () {
 
-                if (novaIsSpeaking) {
+                if (lunaIsSpeaking) {
 
                     speechSynthesis.cancel();
 
