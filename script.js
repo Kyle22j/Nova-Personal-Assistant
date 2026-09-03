@@ -295,7 +295,7 @@ function setupButtons() {
         );
 
     if (addHabitButton) {
-        addHabitButton.addHabitListener(
+        addHabitButton.addEventListener(
             "click",
             addHabit
         );
@@ -3718,6 +3718,16 @@ function setupVoiceRecognition() {
             voiceButton.textContent =
                 "🎙️";
 
+        }
+
+        if (
+            voiceModeActive &&
+            !lunaIsSpeaking
+        ){
+
+            setTimeout(function () {
+                startListening();
+            }, 500);
         }
 
     };
