@@ -263,6 +263,15 @@ function setupButtons() {
     const addProjectButton =
         document.getElementById("add-project-btn");
 
+    const addMemoryButton =
+        document.getElementById("add-memory-btn");
+
+    const addHabitButton = 
+        document.getElementById("add-habit-btn");
+
+    const addExpenseButton =
+        document.getElementById("add-expense-btn");
+
     const sendButton =
         document.getElementById("send-btn");
 
@@ -278,6 +287,25 @@ function setupButtons() {
     if (addProjectButton) {
         addProjectButton.addEventListener("click", addProject);
     }
+
+    if (addMemoryButton) {
+        addMemoryButton.addEventListener(
+            "click",
+            addMemory
+        );
+
+    if (addHabitButton) {
+        addHabitButton.addHabitListener(
+            "click",
+            addHabit
+        );
+
+    if (addExpenseButton) {
+        addExpenseButton.addEventListener(
+            "click",
+            addExpense
+        );
+        
 
     if (sendButton) {
         sendButton.addEventListener("click", sendMessage);
