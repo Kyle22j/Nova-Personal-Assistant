@@ -37,13 +37,13 @@
                 <span>▣</span> Projects
             </button>
 
-            <button class="nav-btn" data-section="Notes">
+            <button class="nav-btn" data-section="memory">
                 <span>📝</span> Memory
 
-            <button class="nav-btn" data-sections="Goals">
+            <button class="nav-btn" data-sections="habits">
                 <span>🕒</span> Habits
 
-            <button class="nav-btn" data-sections="Finance">
+            <button class="nav-btn" data-sections="expenses">
                 <span>💵</span> Expenses
 
             <button class="nav-btn" data-section="assistant">
@@ -271,7 +271,7 @@
                     <h3>When am I free?</h3>
 
                     <p id="free-time-display">
-                        Add events and NOVA will analyze
+                        Add events and LUNA will analyze
                         your available time.
                     </p>
                 </div>
@@ -350,6 +350,220 @@
             </div>
 
         </section>
+
+        <!-- MEMORY -->
+        <section id="memory" class="page-section">
+
+           <div class="page-header">
+         <div>
+            <p class="eyebrow">PERSONAL MEMORY</p>
+
+            <h2>My Notes</h2>
+
+            <p>
+                Important things you want LUNA to remember.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card input-card">
+
+        <input
+            type="text"
+            id="memory-input"
+            placeholder="What would you like LUNA to remember?"
+        >
+
+        <button id="add-memory-btn">
+            Remember ✦
+        </button>
+
+    </div>
+
+
+    <div
+        id="memory-list"
+        class="memory-list"
+    >
+    </div>
+
+</section>
+
+        <!-- HABITS -->
+       <section id="habits" class="page-section">
+
+       <div class="page-header">
+        <div>
+            <p class="eyebrow">PERSONAL GROWTH</p>
+
+            <h2>My Habits & Goals</h2>
+
+            <p>
+                Build consistency and track your progress.
+            </p>
+        </div>
+    </div>
+
+
+    <div class="card input-card">
+
+        <input
+            type="text"
+            id="habit-input"
+            placeholder="What habit or goal do you want to build?"
+        >
+
+        <select id="habit-frequency">
+
+            <option value="daily">
+                Daily
+            </option>
+
+            <option value="weekly">
+                Weekly
+            </option>
+
+        </select>
+
+        <button id="add-habit-btn">
+            Add Habit
+        </button>
+
+    </div>
+
+
+    <div
+        id="habit-list"
+        class="habit-list"
+    >
+    </div>
+
+ </section>
+
+        <!-- EXPENSES -->
+      <section id="expenses" class="page-section">
+
+    <div class="page-header">
+
+        <div>
+
+            <p class="eyebrow">
+                PERSONAL FINANCE
+            </p>
+
+            <h2>My Expenses</h2>
+
+            <p>
+                Keep track of where your money goes.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXPENSE SUMMARY -->
+
+    <div class="dashboard-grid">
+
+        <div class="card stat-card">
+
+            <p>Total Expenses</p>
+
+            <h3 id="expense-total">
+                KSh 0
+            </h3>
+
+            <span>
+                All recorded expenses
+            </span>
+
+        </div>
+
+        <div class="card stat-card">
+
+            <p>This Month</p>
+
+            <h3 id="monthly-expense-total">
+                KSh 0
+            </h3>
+
+            <span>
+                Current monthly spending
+            </span>
+
+        </div>
+
+    </div>
+
+
+     <!-- ADD EXPENSE -->
+
+    <div class="card input-card">
+
+        <input
+            type="text"
+            id="expense-input"
+            placeholder="What did you spend money on?"
+        >
+
+        <input
+            type="number"
+            id="expense-amount"
+            placeholder="Amount"
+            min="0"
+        >
+
+        <select id="expense-category">
+
+            <option value="food">
+                🍔 Food
+            </option>
+
+            <option value="transport">
+                🚗 Transport
+            </option>
+
+            <option value="shopping">
+                🛍 Shopping
+            </option>
+
+            <option value="entertainment">
+                🎬 Entertainment
+            </option>
+
+            <option value="education">
+                📚 Education
+            </option>
+
+            <option value="other">
+                📦 Other
+            </option>
+
+        </select>
+
+        <input
+            type="date"
+            id="expense-date"
+        >
+
+        <button id="add-expense-btn">
+            Add Expense
+        </button>
+
+    </div>
+
+
+    <!-- EXPENSE LIST -->
+
+    <div
+        id="expense-list"
+        class="expense-list"
+    >
+    </div>
+
+</section>
 
     
         <!-- AI ASSISTANT -->
