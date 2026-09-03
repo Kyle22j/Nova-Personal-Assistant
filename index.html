@@ -352,20 +352,18 @@
         </section>
 
         <!-- MEMORY -->
-        <section id="memory" class="page-section">
+<section id="memory" class="page-section">
 
-           <div class="page-header">
-         <div>
+    <div class="page-header">
+        <div>
             <p class="eyebrow">PERSONAL MEMORY</p>
-
             <h2>My Notes</h2>
-
             <p>
-                Important things you want LUNA to remember.
+                Save important thoughts, ideas and
+                information for LUNA to remember.
             </p>
         </div>
     </div>
-
 
     <div class="card input-card">
 
@@ -376,11 +374,10 @@
         >
 
         <button id="add-memory-btn">
-            Remember ✦
+            Save Memory
         </button>
 
     </div>
-
 
     <div
         id="memory-list"
@@ -389,20 +386,23 @@
     </div>
 
 </section>
+        
+      <!-- HABITS -->
+<section id="habits" class="page-section">
 
-        <!-- HABITS -->
-       <section id="habits" class="page-section">
+    <div class="page-header">
 
-       <div class="page-header">
         <div>
             <p class="eyebrow">PERSONAL GROWTH</p>
 
-            <h2>My Habits & Goals</h2>
+            <h2>My Habits</h2>
 
             <p>
-                Build consistency and track your progress.
+                Build consistent habits and track
+                your personal goals.
             </p>
         </div>
+
     </div>
 
 
@@ -411,23 +411,27 @@
         <input
             type="text"
             id="habit-input"
-            placeholder="What habit or goal do you want to build?"
+            placeholder="What habit do you want to build?"
         >
+
 
         <select id="habit-frequency">
 
-            <option value="daily">
+            <option value="Daily">
                 Daily
             </option>
 
-            <option value="weekly">
+            <option value="Weekly">
                 Weekly
             </option>
 
         </select>
 
+
         <button id="add-habit-btn">
+
             Add Habit
+
         </button>
 
     </div>
@@ -439,123 +443,96 @@
     >
     </div>
 
- </section>
+</section>
 
-        <!-- EXPENSES -->
-      <section id="expenses" class="page-section">
+        
+       <!-- EXPENSES -->
+<section id="expenses" class="page-section">
 
     <div class="page-header">
 
         <div>
-
-            <p class="eyebrow">
-                PERSONAL FINANCE
-            </p>
+            <p class="eyebrow">PERSONAL FINANCE</p>
 
             <h2>My Expenses</h2>
 
             <p>
-                Keep track of where your money goes.
+                Track your spending and understand
+                where your money goes.
             </p>
-
         </div>
 
     </div>
 
-
-    <!-- EXPENSE SUMMARY -->
-
-    <div class="dashboard-grid">
-
-        <div class="card stat-card">
-
-            <p>Total Expenses</p>
-
-            <h3 id="expense-total">
-                KSh 0
-            </h3>
-
-            <span>
-                All recorded expenses
-            </span>
-
-        </div>
-
-        <div class="card stat-card">
-
-            <p>This Month</p>
-
-            <h3 id="monthly-expense-total">
-                KSh 0
-            </h3>
-
-            <span>
-                Current monthly spending
-            </span>
-
-        </div>
-
-    </div>
-
-
-     <!-- ADD EXPENSE -->
 
     <div class="card input-card">
 
         <input
             type="text"
-            id="expense-input"
+            id="expense-name"
             placeholder="What did you spend money on?"
         >
+
 
         <input
             type="number"
             id="expense-amount"
             placeholder="Amount"
-            min="0"
         >
+
 
         <select id="expense-category">
 
-            <option value="food">
-                🍔 Food
+            <option value="Food">
+                Food
             </option>
 
-            <option value="transport">
-                🚗 Transport
+            <option value="Transport">
+                Transport
             </option>
 
-            <option value="shopping">
-                🛍 Shopping
+            <option value="Shopping">
+                Shopping
             </option>
 
-            <option value="entertainment">
-                🎬 Entertainment
+            <option value="Entertainment">
+                Entertainment
             </option>
 
-            <option value="education">
-                📚 Education
+            <option value="Bills">
+                Bills
             </option>
 
-            <option value="other">
-                📦 Other
+            <option value="Other">
+                Other
             </option>
 
         </select>
 
-        <input
-            type="date"
-            id="expense-date"
-        >
 
         <button id="add-expense-btn">
+
             Add Expense
+
         </button>
 
     </div>
 
 
-    <!-- EXPENSE LIST -->
+    <div class="card">
+
+        <p class="card-label">
+            TOTAL SPENDING
+        </p>
+
+        <h2 id="expense-total">
+
+            0
+
+        </h2>
+
+    </div>
+
 
     <div
         id="expense-list"
@@ -564,7 +541,6 @@
     </div>
 
 </section>
-
     
         <!-- AI ASSISTANT -->
         <section id="assistant"
