@@ -20,7 +20,7 @@ let conversationMemory = {
     lastTopic: null,
     lastProject: null,
     lastTask: null,
-    lastEvent: null,ntent
+    lastEvent: null,
     recentMessages: [],
     userMood: null,
     lastIntent: null
@@ -1677,15 +1677,6 @@ function addNaturalTask(message) {
 
 }
 
-function saveTasks() {
-
-    localStorage.setItem(
-        "lunaTasks",
-        JSON.stringify(tasks)
-    );
-
-}
-
 
 // LUNA 1.6 - NATURAL SCHEDULE RECOGNITION //
 
@@ -2840,13 +2831,24 @@ function getMoodResponse(mood) {
         case "tired":
 
             return `
-                That's okay. Everyone has days when motivation is low.
+                It sounds like you're tired. You don't have to push
+                yourself to do everything at once.
 
-                Instead of trying to do everything, we could start with one 
-                small thing. Sometimes getting started is the hardest part.
+                Maybe we can start with one small thing, or you can
+                take a moment to rest before continuing.
                 `;
 
-        case "happy":
+        case "unmotivated":
+
+            return `
+               That's okay. Everyone loses motivation sometimes.
+
+                We don't have to solve everything at once.
+                Let's choose one small thing you can do, and we can
+                build from there.
+            `;
+            
+        case "sad":
 
             return `
                 I'm sorry you're having a difficult moment.
@@ -2856,6 +2858,14 @@ function getMoodResponse(mood) {
                 about what's on your mind, or I can help you focus on
                 something practical.
                 `;
+
+        case "happy":
+
+            return `
+               I love hearing that! I'm glad you're having a good day.
+                Let's make the most of that energy. Is there anything
+                you'd like to work on or accomplish today?
+            `;
 
         default:
 
