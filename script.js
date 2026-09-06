@@ -195,11 +195,13 @@ function showSection(sectionId) {
 
     document.querySelectorAll(".page-section")
         .forEach(function (section) {
+            
             section.classList.remove("active");
         });
 
     document.querySelectorAll(".nav-btn")
         .forEach(function (button) {
+            
             button.classList.remove("active");
         });
 
