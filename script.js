@@ -277,15 +277,24 @@ function setupButtons() {
 
 
     if (addTaskButton) {
-        addTaskButton.addEventListener("click", addTask);
+        addTaskButton.addEventListener(
+            "click", 
+            addTask
+        );
     }
 
     if (addEventButton) {
-        addEventButton.addEventListener("click", addEvent);
+        addEventButton.addEventListener(
+            "click", 
+            addEvent
+        );
     }
 
     if (addProjectButton) {
-        addProjectButton.addEventListener("click", addProject);
+        addProjectButton.addEventListener(
+            "click", 
+            addProject
+        );
     }
 
     if (addMemoryButton) {
@@ -293,22 +302,28 @@ function setupButtons() {
             "click",
             addMemory
         );
+    }
 
     if (addHabitButton) {
         addHabitButton.addEventListener(
             "click",
             addHabit
         );
+    }
 
     if (addExpenseButton) {
         addExpenseButton.addEventListener(
             "click",
             addExpense
         );
+    }
         
 
     if (sendButton) {
-        sendButton.addEventListener("click", sendMessage);
+        sendButton.addEventListener(
+            "click", 
+            sendMessage
+        );
     }
 
 
@@ -319,6 +334,9 @@ function setupButtons() {
             function (event) {
 
                 if (event.key === "Enter") {
+
+                    event.preventDefault();
+                    
                     sendMessage();
                 }
 
@@ -328,7 +346,8 @@ function setupButtons() {
     }
 
 
-    document.querySelectorAll(".filter-btn")
+    document
+        .querySelectorAll(".filter-btn")
         .forEach(function (button) {
 
             button.addEventListener(
@@ -338,13 +357,20 @@ function setupButtons() {
                     currentFilter =
                         button.dataset.filter;
 
-                    document.querySelectorAll(
-                        ".filter-btn"
-                    ).forEach(function (btn) {
-                        btn.classList.remove("active");
+                    document
+                        .querySelectorAll(
+                           ".filter-btn"
+                    )
+                    .forEach(function (btn) {
+                        
+                        btn.classList.remove(
+                            "active"
+                        );
                     });
 
-                    button.classList.add("active");
+                    button.classList.add(
+                        "active"
+                    );
 
                     renderTasks();
 
