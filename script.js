@@ -1,7 +1,7 @@
-// LUNA PERSONAL AI ASSISTANT
-// Natural Voice & Conversation Upgrade
+// LUNA PERSONAL AI ASSISTANT //
+// Natural Voice & Conversation Upgrade //
 
-// DATA
+// DATA //
 
 let tasks = JSON.parse(localStorage.getItem("lunaTasks")) || [];
 let events = JSON.parse(localStorage.getItem("lunaEvents")) || [];
@@ -13,20 +13,24 @@ let expenses = JSON.parse(localStorage.getItem("lunaExpenses")) || [];
 let currentFilter = "all";
 
 
-// ==========================================
-// LUNA CONVERSATION MEMORY
-// ==========================================
+
+// LUNA CONVERSATION MEMORY //
 
 let conversationMemory = {
     lastTopic: null,
     lastProject: null,
-    lastTask: null
+    lastTask: null,
+    lastEvent: null,ntent
+    recentMessages: [],
+    userMood: null,
+    lastIntent: null
+    
 };
 
 
-// ==========================================
-// VOICE SYSTEM
-// ==========================================
+
+// VOICE SYSTEM //
+
 
 let voiceModeActive = false;
 let recognition = null;
@@ -36,9 +40,9 @@ let lunaIsSpeaking = false;
 let shouldRestartListening = false;
 
 
-// ==========================================
-// ELEMENTS
-// ==========================================
+
+// ELEMENTS //
+
 
 const taskInput = document.getElementById("task-input");
 const taskPriority = document.getElementById("task-priority");
@@ -56,9 +60,9 @@ const chatInput = document.getElementById("chat-input");
 const chatMessages = document.getElementById("chat-messages");
 
 
-// ==========================================
-// INITIALIZATION
-// ==========================================
+
+// INITIALIZATION //
+
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -87,9 +91,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// ==========================================
-// DATE
-// ==========================================
+
+// DATE //
+
 
 function getTodayString() {
 
@@ -164,9 +168,9 @@ function updateGreeting() {
 }
 
 
-// ==========================================
-// NAVIGATION
-// ==========================================
+
+// NAVIGATION //
+
 
 function setupNavigation() {
 
@@ -224,9 +228,8 @@ function showSection(sectionId) {
 }
 
 
-// ==========================================
-// MOBILE MENU
-// ==========================================
+
+// MOBILE MENU //
 
 const menuToggle =
     document.getElementById("menu-toggle");
@@ -250,9 +253,9 @@ if (menuToggle) {
 }
 
 
-// ==========================================
-// BUTTON SETUP
-// ==========================================
+
+// BUTTON SETUP //
+
 
 function setupButtons() {
 
@@ -387,9 +390,9 @@ function setupButtons() {
 }
 
 
-// ==========================================
-// TASKS
-// ==========================================
+
+// TASKS //
+
 
 function addTask() {
 
@@ -534,9 +537,9 @@ function deleteTask(id) {
 }
 
 
-// ==========================================
-// EVENTS
-// ==========================================
+
+// EVENTS //
+
 
 function addEvent() {
 
@@ -660,9 +663,9 @@ function deleteEvent(id) {
 }
 
 
-// ==========================================
-// PROJECTS
-// ==========================================
+
+// PROJECTS //
+
 
 function addProject() {
 
@@ -800,9 +803,9 @@ function deleteProject(id) {
 }
 
 
-// ==========================================
-// FREE TIME
-// ==========================================
+
+// FREE TIME //
+
 
 function getFreeTimeSummary() {
 
@@ -933,9 +936,9 @@ function minutesToTime(minutes) {
 }
 
 
-// ==========================================
-// DEADLINES
-// ==========================================
+
+// DEADLINES //
+
 
 function getDaysUntil(dateString) {
 
@@ -1013,9 +1016,9 @@ function formatStatus(status) {
 }
 
 
-// ==========================================
-// DASHBOARD
-// ==========================================
+
+// DASHBOARD //
+
 
 function updateDashboard() {
 
@@ -1295,9 +1298,9 @@ function renderDashboardProjects(activeProjects) {
 }
 
 
-// ==========================================
-// DAILY BRIEFING
-// ==========================================
+
+// DAILY BRIEFING //
+
 
 function giveDailyBriefing() {
 
@@ -1375,9 +1378,9 @@ function giveDailyBriefing() {
 
 }
 
-// ==========================================
-// LUNA 1.6 - NATURAL TASK RECOGNITION
-// ==========================================
+
+// LUNA 1.6 - NATURAL TASK RECOGNITION //
+
 
 function detectTaskRequest(message) {
 
@@ -1416,9 +1419,9 @@ function detectTaskRequest(message) {
 }
 
 
-// ==========================================
-// EXTRACT TASK NAME
-// ==========================================
+
+// EXTRACT TASK NAME //
+
 
 function extractTask(message, pattern) {
 
@@ -1465,9 +1468,9 @@ function extractTask(message, pattern) {
 }
 
 
-// ==========================================
-// DETECT DEADLINE
-// ==========================================
+
+// DETECT DEADLINE //
+
 
 function detectTaskDeadline(message) {
 
@@ -1518,9 +1521,8 @@ function detectTaskDeadline(message) {
 }
 
 
-// ==========================================
-// GET NEXT WEEKDAY
-// ==========================================
+
+// GET NEXT WEEKDAY //
 
 function getNextWeekday(dayName) {
 
@@ -1562,9 +1564,9 @@ function getNextWeekday(dayName) {
 }
 
 
-// ==========================================
-// FORMAT DATE FOR INPUT
-// ==========================================
+
+// FORMAT DATE FOR INPUT //
+
 
 function formatDateForInput(date) {
 
@@ -1586,9 +1588,9 @@ function formatDateForInput(date) {
 }
 
 
-// ==========================================
-// CREATE NATURAL TASK
-// ==========================================
+
+// CREATE NATURAL TASK //
+
 
 function addNaturalTask(message) {
 
@@ -1684,9 +1686,9 @@ function saveTasks() {
 
 }
 
-// ==========================================
-// LUNA 1.6 - NATURAL SCHEDULE RECOGNITION
-// ==========================================
+
+// LUNA 1.6 - NATURAL SCHEDULE RECOGNITION //
+
 
 function detectScheduleRequest(message) {
 
@@ -1723,9 +1725,9 @@ function detectScheduleRequest(message) {
 }
 
 
-// ==========================================
-// DETECT EVENT DATE
-// ==========================================
+
+// DETECT EVENT DATE //
+
 
 function detectEventDate(message) {
 
@@ -1792,9 +1794,9 @@ function detectEventDate(message) {
 }
 
 
-// ==========================================
-// DETECT EVENT TIME
-// ==========================================
+
+// DETECT EVENT TIME //
+
 
 function detectEventTime(message) {
 
@@ -1866,9 +1868,9 @@ function detectEventTime(message) {
 }
 
 
-// ==========================================
-// EXTRACT EVENT NAME
-// ==========================================
+
+// EXTRACT EVENT NAME //
+
 
 function extractEventName(message) {
 
@@ -1970,9 +1972,9 @@ function extractEventName(message) {
 }
 
 
-// ==========================================
-// CREATE NATURAL EVENT
-// ==========================================
+
+// CREATE NATURAL EVENT //
+
 
 function addNaturalEvent(message) {
 
@@ -2043,9 +2045,9 @@ function addNaturalEvent(message) {
 
 }
 
-// ==========================================
-// MEMORY
-// ==========================================
+
+// MEMORY //
+
 
 function addMemory() {
 
@@ -2682,6 +2684,11 @@ function sendMessage() {
         "user"
     );
 
+    rememberConversation(
+        "user",
+        message
+    );
+
     chatInput.value = "";
 
     setTimeout(function () {
@@ -2694,6 +2701,11 @@ function sendMessage() {
         addChatMessage(
             response,
             "ai"
+        );
+
+        rememberConversation(
+            "ai",
+            response
         );
 
         speak(response);
@@ -2740,13 +2752,137 @@ function addChatMessage(text, sender) {
 
 }
 
+// MOOD DETECTION //
 
-// ==========================================
-// LUNA'S CONVERSATIONAL BRAIN
-// ==========================================
+function detectMood(message) {
+
+    const text = message.toLowerCase();
+
+    const moods = {
+
+        overwhelmed: [
+            "overwhelmed",
+            "too much",
+            "a lot going on",
+            "so much to do",
+            "stressed"
+        ],
+
+        tired: [
+            "tired",
+            "exhausted",
+            "sleepy",
+            "worn out",
+            "drained"
+        ],
+
+        unmotivated: [
+            "don't feel like",
+            "dont feel like",
+            "no motivation",
+            "unmotivated",
+            "can't focus",
+            "cant focus"
+        ],
+
+        happy: [
+            "happy",
+            "excited",
+            "great day",
+            "feeling good",
+            "amazing"
+        ],
+
+        sad: [
+            "sad",
+            "down",
+            "upset",
+            "lonely",
+            "bad day"
+        ]
+    };
+
+    for (const mood in moods) {
+
+        for (const phrase of moods[mood]) {
+
+            if (text.includes(phrase)) {
+
+                conversationMemory.userMood = mood;
+
+                return mood;
+
+            }
+        }
+    }
+
+    return null;
+
+}
+
+// LUNA MOOD'S RESPONSES //
+
+function getMoodResponse(mood) {
+   
+    switch (mood) {
+
+        case "overwhelmed":
+
+            return `
+                It sounds like you have a lot on your mind right now.
+                Let's slow things down a little.
+
+                You don't have to solve everything at once.
+                If you'd like, I can help you look at your tasks
+                and figure out the most important thing to focus on first.
+            `;
+
+        case "tired":
+
+            return `
+                That's okay. Everyone has days when motivation is low.
+
+                Instead of trying to do everything, we could start with one 
+                small thing. Sometimes getting started is the hardest part.
+                `;
+
+        case "happy":
+
+            return `
+                I'm sorry you're having a difficult moment.
+
+                You don't have to have everything figured out right now.
+                We can take things slowly. If you want, you can talk to me 
+                about what's on your mind, or I can help you focus on
+                something practical.
+                `;
+
+        default:
+
+             return null;
+
+    }
+
+}
+
+
+// LUNA'S CONVERSATIONAL BRAIN //
 
 function generateAssistantResponse(message) {
 
+    const detectedMood =
+        detectMood(message);
+
+    if (detectedMood) {
+
+        conversationMemory.lastTopic =
+            "mood";
+
+        return getMoodResponse(
+            detectedMood
+        );
+    }
+    
     // NATURAL TASK DETECTION //
 
     const newTask =
@@ -3030,9 +3166,9 @@ function generateAssistantResponse(message) {
 }
 
 
-// ==========================================
-// NATURAL RESPONSES
-// ==========================================
+
+// NATURAL RESPONSES //
+
 
 function getNaturalGreeting() {
 
@@ -3383,9 +3519,9 @@ function getProductivityAdvice() {
 }
 
 
-// ==========================================
-// FOLLOW-UP MEMORY
-// ==========================================
+
+// FOLLOW-UP MEMORY //
+
 
 function handleFollowUp() {
 
@@ -3452,9 +3588,9 @@ function handleFollowUp() {
 }
 
 
-// ==========================================
-// MUSIC
-// ==========================================
+
+// MUSIC //
+
 
 function handleMusicRequest(text) {
 
@@ -3509,9 +3645,9 @@ function openMusicSearch(query) {
 }
 
 
-// ==========================================
-// SPEECH SYNTHESIS
-// ==========================================
+
+// SPEECH SYNTHESIS //
+
 
 function loadBestVoice() {
 
@@ -3649,9 +3785,8 @@ function cleanSpeechText(text) {
 }
 
 
-// ==========================================
-// VOICE RECOGNITION
-// ==========================================
+
+// VOICE RECOGNITION //
 
 function setupVoiceRecognition() {
 
@@ -3823,9 +3958,9 @@ function startListening() {
 }
 
 
-// ==========================================
-// NATURAL VOICE INPUT
-// ==========================================
+
+// NATURAL VOICE INPUT //
+
 
 function handleVoiceInput(transcript) {
 
@@ -3864,9 +3999,9 @@ function handleVoiceInput(transcript) {
 }
 
 
-// ==========================================
-// VOICE MODE
-// ==========================================
+
+// VOICE MODE //
+
 
 function toggleVoiceMode() {
 
@@ -3935,9 +4070,9 @@ function toggleVoiceMode() {
 }
 
 
-// ==========================================
-// TIME FORMATTING
-// ==========================================
+
+// TIME FORMATTING //
+
 
 function formatTime(time) {
 
@@ -3968,9 +4103,9 @@ function formatTime(time) {
 }
 
 
-// ==========================================
-// HELPERS
-// ==========================================
+
+// HELPERS //
+
 
 function formatDate(dateString) {
 
