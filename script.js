@@ -27,6 +27,22 @@ let conversationMemory = {
     
 };
 
+// CONVERSATION MEMORY //
+
+function rememberConversation(sender, message) {
+
+    conversationMemory.recentMessages.push({
+        sender: sender,
+        message: message,
+        time: new Date().toISOString()
+    });
+
+    // Keep only the most recent 10 messages
+    if (conversationMemory.recentMessages.length > 10) {
+        conversationMemory.recentMessages.shift();
+
+    }
+}
 
 
 // VOICE SYSTEM //
